@@ -846,6 +846,11 @@ const ONTO = {"year":"2026","p":{"minDays":180,"basePeriod":18,"rate":0.6,"minRa
     sel.addEventListener('change',sync); sync();
     if(F.sep) sel.value=F.sep;
     sync();
+    if(F.vjc) $('#f-vjc').value=F.vjc;
+    if(F.months) $('#f-months').value=F.months;
+    if(F.age) $('#f-age').value=F.age;
+    if(F.days) $('#f-days').value=F.days;
+    if(F.wage) $('#f-wage').value=F.wage;
     $('#f-run').addEventListener('click',()=>{
       F.sep=sel.value; F.vjc=$('#f-vjc').value;
       F.months=+$('#f-months').value; F.age=+$('#f-age').value||0;
@@ -949,7 +954,14 @@ const ONTO = {"year":"2026","p":{"minDays":180,"basePeriod":18,"rate":0.6,"minRa
         const rs=document.getElementById('q-reason');
         if(rs&&rs.selectedIndex>0){ const v=rs.value;
           F.sep = /권고사직/.test(v)?'권고사직' : /계약기간/.test(v)?'계약만료'
-                : /해고/.test(v)?'해고_일반' : '자진퇴사'; }
+                : /해고/.test(v)?'해고_일반' : '자진퇴사';
+          if(F.sep==='자진퇴사')
+            F.vjc = /임금이 밀렸다/.test(v) ? 'VJC_1B_WAGE_ARREARS'
+                  : /출퇴근/.test(v) ? 'VJC_6_COMMUTE' : 'VJC_NONE_PERSONAL'; }
+        const ps=document.getElementById('q-period');
+        if(ps&&ps.selectedIndex>0){ const pv=ps.value;
+          F.months = /1년 ~ 3년/.test(pv)?24 : /3년 ~ 5년/.test(pv)?48
+                   : /5년 이상/.test(pv)?96 : 11; }
         open(); });
   });
 })();
